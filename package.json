@@ -1,0 +1,30 @@
+{
+  "name": "node_cfg_lib",
+  "version": "1.0.0",
+  "description": "a NodeJs configuration library based on MongoDB.",
+  "main": "test.js",
+  "dependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "mongodb": "^2.2.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "bable-node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/answershuto/NodeCfgLib.git"
+  },
+  "keywords": [
+    "node",
+    "mongoDB",
+    "library"
+  ],
+  "author": "Cao Yang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/answershuto/NodeCfgLib/issues"
+  },
+  "homepage": "https://github.com/answershuto/NodeCfgLib#readme"
+}
