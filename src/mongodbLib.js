@@ -1,6 +1,7 @@
 // ES6 config lib
 
-import sysCfg from './cfg'              
+import sysCfg from './cfg'      
+require('babel-core/register');        
 
 let mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -14,8 +15,33 @@ let Schema = new mongoose.Schema({
 
 let cfgModel = mongoose.model('myConfig', Schema);
 
+let $empty = function(){}
 
 let DBoperation = (function(){
+
+	let findPro = function(name = 'defaultConfig'){
+		return new Promise(function(resolve, reject){
+			cfgModel.find({name},function(err,doc){
+				if (err) reject(err);
+				resolve(doc || {});
+			})
+		});
+	}
+
+	let savePro = function(name = 'defaultConfig', config = {}){
+		return new Promise(function(resolve, reject){
+			let modelObj = new cfgModel({
+				name,
+				config
+			});
+
+			modelObj.save(function(err){
+				if (err) reject(err);
+				resolve();
+			})
+		})
+	}
+
 	return {
 		/** test 
 
@@ -37,15 +63,26 @@ let DBoperation = (function(){
 		* @return 
 
 		*/
-		setConfig(name = 'defaultConfig', config = {}){
-			let modelObj = new cfgModel({
-				name,
-				config
-			});
+		async setConfig(name = 'defaultConfig', config = {}, callBack = $empty){
+			let f1 = await findPro(name);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+			if(f1.length === 0) {
+				await savePro(name, config); 
+			}
+			else{
+				let s = function(config){
+					return new Promise(function(resolve, reject){
+						f1[0].config = config;
+						f1[0].save(function(err){
+							if (err) reject(err);
+							resolve();
+						})
+					})
+				}
 
-			modelObj.save(function(err){
+				await s(config);
+			}
 
-			})
+			callBack();
 		},
 
 		/** get configuration 
@@ -55,13 +92,9 @@ let DBoperation = (function(){
 		* @return config
 
 		*/
-		getConfig(name = 'defaultConfig'){
-			cfgModel.find({name},function(err,doc){
-				if (err) {
-					return next(err);
-				};
-				console.log(doc)
-			})
+		async getConfig(name = 'defaultConfig', callBack = $empty){
+			let f1 = await findPro(name); 
+			callBack(f1);
 		}
 	}
 })();
