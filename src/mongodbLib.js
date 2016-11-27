@@ -42,6 +42,8 @@ let DBoperation = (function(){
 		})
 	}
 
+	let callBackFuncsMap = new Map();
+
 	return {
 		/** test 
 
@@ -82,6 +84,7 @@ let DBoperation = (function(){
 				await s(config);
 			}
 
+			typeof callBackFuncsMap.get(name) === 'function' && callBackFuncsMap.get(name)(config);
 			callBack();
 		},
 
@@ -95,7 +98,29 @@ let DBoperation = (function(){
 		async getConfig(name = 'defaultConfig', callBack = $empty){
 			let f1 = await findPro(name); 
 			callBack(f1);
-		}
+		},
+
+		/** get configuration 
+
+		* @param name	config name
+
+		* @return config
+
+		*/
+		attach(name = 'defaultConfig', callBack = $empty){
+			callBackFuncsMap.set(name, callBack);
+		},
+
+		/** get configuration 
+
+		* @param name	config name
+
+		* @return config
+
+		*/
+		detach(name = 'defaultConfig'){
+			callBackFuncsMap.set(name, $empty);
+		},
 	}
 })();
 
