@@ -14,6 +14,7 @@ let Schema = new mongoose.Schema({
 })
 
 let cfgModel = mongoose.model('myConfig', Schema);
+let defaultCfgModel = mongoose.model('myDefaultConfig', Schema);
 
 let $empty = function(){}
 
@@ -42,7 +43,31 @@ let DBoperation = (function(){
 		})
 	}
 
+	let findDefaultPro = function(name = 'defaultConfig'){
+		return new Promise(function(resolve, reject){
+			defaultCfgModel.find({name},function(err,doc){
+				if (err) reject(err);
+				resolve(doc || {});
+			})
+		});
+	}
+
+	let saveDefaultPro = function(name = 'defaultConfig', config = {}){
+		return new Promise(function(resolve, reject){
+			let modelObj = new defaultCfgModel({
+				name,
+				config
+			});
+
+			modelObj.save(function(err){
+				if (err) reject(err);
+				resolve();
+			})
+		})
+	}
+
 	let callBackFuncsMap = new Map();
+
 	let VeritycallBackFuncsMap = new Map();
 
 	return {
@@ -62,6 +87,8 @@ let DBoperation = (function(){
 		* @param name	config name
 
 		* @param config		config
+
+		* @param callBack 	callBack function
 
 		* @return 
 
@@ -107,11 +134,55 @@ let DBoperation = (function(){
 			callBack(f1[0].config);
 		},
 
+		/** Submit default configuration 
+
+		* @param name	default config name
+
+		* @param config		defult config
+
+		* @return 
+
+		*/
+		async setDefault(name = 'defaultConfig', config = {}, callBack = $empty){
+			let f1 = await findDefaultPro(name);  
+
+			if(f1.length === 0) {
+				await saveDefaultPro(name, config); 
+			}
+			else{
+				let s = function(config){
+					return new Promise(function(resolve, reject){
+						f1[0].config = config;
+						f1[0].save(function(err){
+							if (err) reject(err);
+							resolve();
+						})
+					})
+				}
+
+				await s(config);
+			}
+
+			callBack();
+		},
+
+		/** get default configuration 
+
+		* @param name	config name
+
+		* @return
+
+		*/
+		async getDefault(name = 'defaultConfig', callBack = $empty){
+			let f1 = await findDefaultPro(name); 
+			callBack(f1[0].config);
+		},
+
 		/** attach config callback function
 
 		* @param name	config name
 
-		* @param callBack	callBack function
+		* @param callBack	callBack function                                       
 
 		* @return
 
