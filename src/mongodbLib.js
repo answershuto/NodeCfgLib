@@ -43,6 +43,7 @@ let DBoperation = (function(){
 	}
 
 	let callBackFuncsMap = new Map();
+	let VeritycallBackFuncsMap = new Map();
 
 	return {
 		/** test 
@@ -66,7 +67,12 @@ let DBoperation = (function(){
 
 		*/
 		async setConfig(name = 'defaultConfig', config = {}, callBack = $empty){
-			let f1 = await findPro(name);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+			let f1 = await findPro(name);  
+
+			if(typeof VeritycallBackFuncsMap.get(name) === 'function' && !VeritycallBackFuncsMap.get(name)(config)){
+				return;
+			}
+
 			if(f1.length === 0) {
 				await savePro(name, config); 
 			}
@@ -85,6 +91,7 @@ let DBoperation = (function(){
 			}
 
 			typeof callBackFuncsMap.get(name) === 'function' && callBackFuncsMap.get(name)(config);
+
 			callBack();
 		},
 
@@ -92,34 +99,60 @@ let DBoperation = (function(){
 
 		* @param name	config name
 
-		* @return config
+		* @return
 
 		*/
 		async getConfig(name = 'defaultConfig', callBack = $empty){
 			let f1 = await findPro(name); 
-			callBack(f1);
+			callBack(f1[0].config);
 		},
 
-		/** get configuration 
+		/** attach config callback function
 
 		* @param name	config name
 
-		* @return config
+		* @param callBack	callBack function
+
+		* @return
 
 		*/
 		attach(name = 'defaultConfig', callBack = $empty){
 			callBackFuncsMap.set(name, callBack);
 		},
 
-		/** get configuration 
+		/** detach config callback function
 
 		* @param name	config name
 
-		* @return config
+		* @return 
 
 		*/
 		detach(name = 'defaultConfig'){
-			callBackFuncsMap.set(name, $empty);
+			delete callBackFuncsMap[name];
+		},
+
+		/** attach verity config callback function 
+
+		* @param name	config name
+
+		* @param callBack	config name
+
+		* @return 
+
+		*/
+		attachVerity(name = 'defaultConfig', callBack = $empty){
+			VeritycallBackFuncsMap.set(name, callBack);
+		},
+
+		/** detach verity config callback function  
+
+		* @param name	config name
+
+		* @return 
+
+		*/
+		detachVerity(name = 'defaultConfig'){
+			delete VeritycallBackFuncsMap[name];
 		},
 	}
 })();
