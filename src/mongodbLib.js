@@ -225,6 +225,31 @@ let DBoperation = (function(){
 		detachVerity(name = 'defaultConfig'){
 			delete VeritycallBackFuncsMap[name];
 		},
+
+		/** Restore default configuration 
+
+		* @param name	config name
+
+		* @return 
+
+		*/
+		restore(name = 'defaultConfig'){
+			if(typeof name) name = [name];
+			name.forEach(function(item,index){
+				async function setDefaultToCfg(){
+					let f1 = await findDefaultPro(item);  
+					let g1 = await findPro(item); 
+					if (f1.length !== 0 && g1.length !== 0) {
+						g1[0].config = f1[0].config;
+						g1[0].save(function(err){
+							if(err) console.log(err);
+						})
+					};
+				}
+
+				setDefaultToCfg();
+			})
+		},
 	}
 })();
 
