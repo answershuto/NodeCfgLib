@@ -18,6 +18,10 @@ let defaultCfgModel = mongoose.model('myDefaultConfig', Schema);
 
 let $empty = function(){}
 
+let consoleErr = function(err){
+	console.log('Node config lib err:'+err);
+}
+
 let DBoperation = (function(){
 
 	let findPro = function(name = 'defaultConfig'){
@@ -242,7 +246,7 @@ let DBoperation = (function(){
 					if (f1.length !== 0 && g1.length !== 0) {
 						g1[0].config = f1[0].config;
 						g1[0].save(function(err){
-							if(err) console.log(err);
+							if(err) consoleErr(err);
 						})
 					};
 				}
