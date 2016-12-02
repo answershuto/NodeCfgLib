@@ -17,18 +17,58 @@ import db from './src/mongodbLib'
 
 setConfig		保存（修改）配置	
 
+```javascript
+db.setConfig('test',{a:111,b:222}, function(){})})
+```
+
 getConfig		获取当前配置
+
+```javascript
+db.getConfig('test', function(d){
+	console.log('getConfig',d);
+})
+```
 
 setDefault		设置默认配置
 
+```javascript
+db.setDefault('test',{a:333,b:555}, function(){})
+```
+
 getDefault		获取默认配置
+
+```javascript
+db.getDefault('test', function(d){
+	console.log('default',d);
+}
+```
 
 attach			注册配置回调函数（保存成功后回调）
 
+```javascript
+db.attach('test', function(config){console.log('cfg', confiqg)})                                 
+```
+
 detach			注销配置回调函数
+
+```javascript
+db.detach('test');
+```
 
 attachVerity		注册配置检测函数（返回false则不继续保存该配置）
 
-detachVerity		主调配置检测函数
+```javascript
+db.attachVerity('test', function(d){return true;})
+```
+
+detachVerity		注销配置检测函数
+
+```javascript
+db.detachVerity('test', function(){})
+```
 
 restore			将默认配置设置给当前配置
+
+```javascript
+db.restore('test')
+```
