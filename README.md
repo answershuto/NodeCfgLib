@@ -55,13 +55,13 @@ detach			注销配置回调函数
 db.detach('test');
 ```
 
-attachVerity		注册配置检测函数（返回false则不继续保存该配置）
+attachVerity		注册配置钩子函数（在保存之前检测配置的数据的钩子函数，如果该函数返回false则不继续保存该配置）
 
 ```javascript
 db.attachVerity('test', function(d){return true;})
 ```
 
-detachVerity		注销配置检测函数
+detachVerity		注销配置钩子函数
 
 ```javascript
 db.detachVerity('test', function(){})
