@@ -46,13 +46,14 @@ db.getDefault('test', function(d){
 attach			注册配置回调函数（保存成功后回调）
 
 ```javascript
-db.attach('test', function(config){console.log('cfg', confiqg)})                                 
+let func = function(config){console.log('cfg1', config)}
+db.attach('test', func);                             
 ```
 
 detach			注销配置回调函数
 
 ```javascript
-db.detach('test');
+db.detach('test', func);
 ```
 
 attachVerity		注册配置钩子函数（在保存之前检测配置的数据的钩子函数，如果该函数返回false则不继续保存该配置）
