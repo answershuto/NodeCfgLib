@@ -207,6 +207,8 @@ let DBoperation = (function(){
 
 		* @param name	config name
 
+		* @param callBack	callBack function  
+
 		* @return 
 
 		*/
