@@ -121,7 +121,7 @@ let DBoperation = (function(){
 				await s(config);
 			}
 
-			typeof callBackFuncsMap.get(name) === 'function' && callBackFuncsMap.get(name)(config);
+			callBackFuncsMap.has(name) && [...callBackFuncsMap.get(name)].forEach((item, index) => (typeof item === 'function' && item(config)));
 
 			callBack();
 		},
@@ -192,7 +192,15 @@ let DBoperation = (function(){
 
 		*/
 		attach(name = 'defaultConfig', callBack = $empty){
-			callBackFuncsMap.set(name, callBack);
+			if (callBackFuncsMap.has(name)) {
+				let szFuncs = callBackFuncsMap.get(name);
+				szFuncs.add(callBack);//Set has unique data
+			}
+			else{
+				callBackFuncsMap.set(name, new Set([callBack]));
+			}
+
+			return true;
 		},
 
 		/** detach config callback function
@@ -202,8 +210,13 @@ let DBoperation = (function(){
 		* @return 
 
 		*/
-		detach(name = 'defaultConfig'){
-			delete callBackFuncsMap[name];
+		detach(name = 'defaultConfig', callBack = $empty){
+			if (callBackFuncsMap.has(name)) {
+				return callBackFuncsMap.get(name).delete(callBack)
+			}
+			else{
+				return false;
+			}
 		},
 
 		/** attach verity config callback function 
