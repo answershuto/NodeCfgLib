@@ -1,19 +1,25 @@
 # 一个基于MongoDB的NodeJs系统配置操作库。
 
+NodeCfgLib是一个基于MongoDB的Node.js系统配置库。
+
+可以方便地设置存储系统相关配置，以配置名-配置（JSON）的形式存储。
 
 
-## 使用
 
-配置MongDB数据库。
+## Import
+
+安装及配置MongDB数据库。
+
+将src下面的文件放入你的工程，将package.json中依赖的选项合并到你的工程。
 
 ```javascript
 import db from './src/mongodbLib'
 ```
-注：本库使用ES6语法以及async，请使用babel。
+注：本库使用ES6语法以及ES7中的async特性，请使用babel。
 
 
 
-## 接口
+## API
 
 setConfig		保存（修改）配置	
 
